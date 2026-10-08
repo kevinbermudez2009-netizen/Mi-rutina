@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   viewport-fit=cover">
+
+    <title>Mi Semana</title>
+
+
+    <style>
+
+        /* =========================
+           CONFIGURACIÓN GENERAL
+           ========================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "SF Pro Display",
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background: #f5f5f7;
+
+            color: #1c1c1e;
+
+            padding:
+                env(safe-area-inset-top)
+                16px
+                env(safe-area-inset-bottom);
+        }
+
+
+        .contenedor {
+            max-width: 600px;
+
+            margin: 0 auto;
+
+            padding: 20px 0 40px;
+        }
+
+
+        /* =========================
+           TÍTULO
+           ========================= */
+
+        h1 {
+            font-size: 34px;
+
+            margin: 10px 0 5px;
+        }
+
+
+        .subtitulo {
+            color: #777;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* =========================
+           TARJETA DE PROGRESO
+           ========================= */
+
+        .tarjeta-progreso {
+            background: white;
+
+            border-radius: 22px;
+
+            padding: 20px;
+
+            margin-bottom: 18px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.06);
+        }
+
+
+        .parte-superior {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .porcentaje {
+            font-size: 32px;
+
+            font-weight: 700;
+        }
+
+
+        .texto-pequeno {
+            color: #777;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           BARRA DE PROGRESO
+           ========================= */
+
+        .barra {
+            width: 100%;
+
+            height: 12px;
+
+            background: #e5e5ea;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            margin-top: 14px;
+        }
+
+
+        .barra-progreso {
+            height: 100%;
+
+            width: 0%;
+
+            background: #1c1c1e;
+
+            border-radius: 20px;
+
+            transition: width 0.3s ease;
+        }
+
+
+        /* =========================
+           DÍAS DE LA SEMANA
+           ========================= */
+
+        .dias {
+            display: flex;
+
+            gap: 8px;
+
+            overflow-x: auto;
+
+            padding-bottom: 8px;
+
+            margin-bottom: 15px;
+
+            scrollbar-width: none;
+        }
+
+
+        .dias::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        .boton-dia {
+            flex: 0 0 auto;
+
+            border: none;
+
+            background: white;
+
+            border-radius: 16px;
+
+            padding: 12px 16px;
+
+            font-size: 14px;
+
+            color: #666;
+
+            cursor: pointer;
+        }
+
+
+        .boton-dia.activo {
+            background: #1c1c1e;
+
+            color: white;
+        }
+
+
+        /* =========================
+           PANEL DE CADA DÍA
+           ========================= */
+
+        .dia {
+            display: none;
+        }
+
+
+        .dia.activo {
+            display: block;
+        }
+
+
+        .titulo-dia {
+            font-size: 25px;
+
+            font-weight: 700;
+
+            margin: 10px 0 4px;
+        }
+
+
+        .contador-dia {
+            color: #777;
+
+            margin-bottom: 15px;
+        }
+
+
+        /* =========================
+           ACTIVIDADES
+           ========================= */
+
+        .actividad {
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 17px;
+
+            margin-bottom: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.05);
+
+            transition: 0.2s ease;
+        }
+
+
+        .actividad input {
+            width: 22px;
+
+            height: 22px;
+
+            accent-color: #1c1c1e;
+
+            flex-shrink: 0;
+        }
+
+
+        .texto-actividad {
+            font-size: 17px;
+
+            font-weight: 500;
+        }
+
+
+        .actividad.completada {
+            opacity: 0.5;
+        }
+
+
+        .actividad.completada
+        .texto-actividad {
+
+            text-decoration: line-through;
+        }
+
+
+        /* =========================
+           BOTÓN REINICIAR
+           ========================= */
+
+        .reiniciar {
+            width: 100%;
+
+            border: none;
+
+            background: #e5e5ea;
+
+            color: #1c1c1e;
+
+            padding: 15px;
+
+            border-radius: 16px;
+
+            font-size: 16px;
+
+            margin-top: 15px;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           MODO OSCURO
+           ========================= */
+
+        @media (prefers-color-scheme: dark) {
+
+            body {
+                background: #000;
+
+                color: white;
+            }
+
+
+            .tarjeta-progreso,
+            .boton-dia,
+            .actividad {
+
+                background: #1c1c1e;
+            }
+
+
+            .barra {
+                background: #3a3a3c;
+            }
+
+
+            .barra-progreso {
+                background: white;
+            }
+
+
+            .boton-dia.activo {
+                background: white;
+
+                color: black;
+            }
+
+
+            .texto-pequeno,
+            .subtitulo,
+            .contador-dia {
+
+                color: #aaa;
+            }
+
+
+            .reiniciar {
+                background: #2c2c2e;
+
+                color: white;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="contenedor">
+
+
+    <!-- =====================
+         ENCABEZADO
+         ===================== -->
+
+    <h1>Mi semana 💪</h1>
+
+    <div class="subtitulo">
+
+        Organiza tu semana y marca lo que completes.
+
+    </div>
+
+
+    <!-- =====================
+         PROGRESO
+         ===================== -->
+
+    <div class="tarjeta-progreso">
+
+        <div class="parte-superior">
+
+            <div>
+
+                <div class="texto-pequeno">
+                    Progreso semanal
+                </div>
+
+                <div
+                    class="porcentaje"
+                    id="porcentaje">
+
+                    0%
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="texto-pequeno"
+                id="total">
+
+                0 / 23
+
+            </div>
+
+        </div>
+
+
+        <div class="barra">
+
+            <div
+                class="barra-progreso"
+                id="barraProgreso">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================
+         BOTONES DE DÍAS
+         ===================== -->
+
+    <div class="dias">
+
+
+        <button
+            class="boton-dia activo"
+            data-dia="0">
+
+            Lunes
+
+        </button>
+
+
+        <button
+            class="boton-dia"
+            data-dia="1">
+
+            Martes
+
+        </button>
+
+
+        <button
+            class="boton-dia"
+            data-dia="2">
+
+            Miércoles
+
+        </button>
+
+
+        <button
+            class="boton-dia"
+            data-dia="3">
+
+            Jueves
+
+        </button>
+
+
+        <button
+            class="boton-dia"
+            data-dia="4">
+
+            Viernes
+
+        </button>
+
+
+        <button
+            class="boton-dia"
+            data-dia="5">
+
+            Sábado
+
+        </button>
+
+
+        <button
+            class="boton-dia"
+            data-dia="6">
+
+            Domingo
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =====================
+         LUNES
+         ===================== -->
+
+    <div
+        class="dia activo"
+        id="dia0">
+
+        <div class="titulo-dia">
+            Lunes
+        </div>
+
+        <div
+            class="contador-dia"
+            id="contador0">
+
+            0 / 3 completadas
+
+        </div>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="0"
+                data-tarea="0">
+
+            <span class="texto-actividad">
+                🦵 Pierna
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="0"
+                data-tarea="1">
+
+            <span class="texto-actividad">
+                💼 Trabajo
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="0"
+                data-tarea="2">
+
+            <span class="texto-actividad">
+                🎸 Guitarra
+            </span>
+
+        </label>
+
+    </div>
+
+
+    <!-- =====================
+         MARTES
+         ===================== -->
+
+    <div
+        class="dia"
+        id="dia1">
+
+        <div class="titulo-dia">
+            Martes
+        </div>
+
+        <div
+            class="contador-dia"
+            id="contador1">
+
+            0 / 4 completadas
+
+        </div>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="1"
+                data-tarea="0">
+
+            <span class="texto-actividad">
+                🏃 Running
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="1"
+                data-tarea="1">
+
+            <span class="texto-actividad">
+                💼 Trabajo
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="1"
+                data-tarea="2">
+
+            <span class="texto-actividad">
+                🏋️ Gym
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="1"
+                data-tarea="3">
+
+            <span class="texto-actividad">
+                🏫 Clase
+            </span>
+
+        </label>
+
+    </div>
+
+
+    <!-- =====================
+         MIÉRCOLES
+         ===================== -->
+
+    <div
+        class="dia"
+        id="dia2">
+
+        <div class="titulo-dia">
+            Miércoles
+        </div>
+
+        <div
+            class="contador-dia"
+            id="contador2">
+
+            0 / 4 completadas
+
+        </div>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="2"
+                data-tarea="0">
+
+            <span class="texto-actividad">
+                🏊 Natación
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="2"
+                data-tarea="1">
+
+            <span class="texto-actividad">
+                💼 Trabajo
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="2"
+                data-tarea="2">
+
+            <span class="texto-actividad">
+                📝 Tareas
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="2"
+                data-tarea="3">
+
+            <span class="texto-actividad">
+                🎸 Guitarra
+            </span>
+
+        </label>
+
+    </div>
+
+
+    <!-- =====================
+         JUEVES
+         ===================== -->
+
+    <div
+        class="dia"
+        id="dia3">
+
+        <div class="titulo-dia">
+            Jueves
+        </div>
+
+        <div
+            class="contador-dia"
+            id="contador3">
+
+            0 / 4 completadas
+
+        </div>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="3"
+                data-tarea="0">
+
+            <span class="texto-actividad">
+                🏋️ Gym
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="3"
+                data-tarea="1">
+
+            <span class="texto-actividad">
+                🏃 Running
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="3"
+                data-tarea="2">
+
+            <span class="texto-actividad">
+                💼 Trabajo
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="3"
+                data-tarea="3">
+
+            <span class="texto-actividad">
+                🏫 Clase
+            </span>
+
+        </label>
+
+    </div>
+
+
+    <!-- =====================
+         VIERNES
+         ===================== -->
+
+    <div
+        class="dia"
+        id="dia4">
+
+        <div class="titulo-dia">
+            Viernes
+        </div>
+
+        <div
+            class="contador-dia"
+            id="contador4">
+
+            0 / 4 completadas
+
+        </div>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="4"
+                data-tarea="0">
+
+            <span class="texto-actividad">
+                💼 Trabajo
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="4"
+                data-tarea="1">
+
+            <span class="texto-actividad">
+                🏊 Natación
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="4"
+                data-tarea="2">
+
+            <span class="texto-actividad">
+                📝 Tarea
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="4"
+                data-tarea="3">
+
+            <span class="texto-actividad">
+                🎸 Guitarra
+            </span>
+
+        </label>
+
+    </div>
+
+
+    <!-- =====================
+         SÁBADO
+         ===================== -->
+
+    <div
+        class="dia"
+        id="dia5">
+
+        <div class="titulo-dia">
+            Sábado
+        </div>
+
+        <div
+            class="contador-dia"
+            id="contador5">
+
+            0 / 2 completadas
+
+        </div>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="5"
+                data-tarea="0">
+
+            <span class="texto-actividad">
+                💼 Trabajo
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="5"
+                data-tarea="1">
+
+            <span class="texto-actividad">
+                🧘 Libre
+            </span>
+
+        </label>
+
+    </div>
+
+
+    <!-- =====================
+         DOMINGO
+         ===================== -->
+
+    <div
+        class="dia"
+        id="dia6">
+
+        <div class="titulo-dia">
+            Domingo
+        </div>
+
+        <div
+            class="contador-dia"
+            id="contador6">
+
+            0 / 2 completadas
+
+        </div>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="6"
+                data-tarea="0">
+
+            <span class="texto-actividad">
+                🏃 Salida / Fondo
+            </span>
+
+        </label>
+
+
+        <label class="actividad">
+
+            <input
+                type="checkbox"
+                data-dia="6"
+                data-tarea="1">
+
+            <span class="texto-actividad">
+                📅 Planificación semanal
+            </span>
+
+        </label>
+
+    </div>
+
+
+    <!-- =====================
+         REINICIAR
+         ===================== -->
+
+    <button
+        class="reiniciar"
+        id="reiniciar">
+
+        🔄 Reiniciar semana
+
+    </button>
+
+
+</div>
+
+
+<!-- =========================
+     JAVASCRIPT
+     ========================= -->
+
+<script>
+
+
+/* =========================
+   CONFIGURACIÓN
+   ========================= */
+
+const cantidades = [
+    3,  // Lunes
+    4,  // Martes
+    4,  // Miércoles
+    4,  // Jueves
+    4,  // Viernes
+    2,  // Sábado
+    2   // Domingo
+];
+
+
+const TOTAL = 23;
+
+
+const CLAVE =
+    "mi_rutina_semanal";
+
+
+/* =========================
+   CARGAR DATOS GUARDADOS
+   ========================= */
+
+let estado =
+    JSON.parse(
+        localStorage.getItem(CLAVE) || "{}"
+    );
+
+
+/* =========================
+   CAMBIAR DE DÍA
+   ========================= */
+
+document
+    .querySelectorAll(".boton-dia")
+    .forEach(boton => {
+
+
+        boton.addEventListener(
+            "click",
+            () => {
+
+
+                const dia =
+                    boton.dataset.dia;
+
+
+                /* Quitar activo */
+
+                document
+                    .querySelectorAll(".boton-dia")
+                    .forEach(b => {
+
+                        b.classList
+                            .remove("activo");
+
+                    });
+
+
+                document
+                    .querySelectorAll(".dia")
+                    .forEach(panel => {
+
+                        panel.classList
+                            .remove("activo");
+
+                    });
+
+
+                /* Activar botón */
+
+                boton.classList
+                    .add("activo");
+
+
+                /* Activar panel */
+
+                document
+                    .getElementById(
+                        "dia" + dia
+                    )
+                    .classList
+                    .add("activo");
+
+            }
+
+        );
+
+    });
+
+
+/* =========================
+   CHECKBOXES
+   ========================= */
+
+document
+    .querySelectorAll(
+        'input[type="checkbox"]'
+    )
+    .forEach(checkbox => {
+
+
+        checkbox.addEventListener(
+            "change",
+            () => {
+
+
+                const dia =
+                    checkbox.dataset.dia;
+
+
+                const tarea =
+                    checkbox.dataset.tarea;
+
+
+                const clave =
+                    dia + "-" + tarea;
+
+
+                estado[clave] =
+                    checkbox.checked;
+
+
+                /* Guardar */
+
+                localStorage.setItem(
+                    CLAVE,
+                    JSON.stringify(estado)
+                );
+
+
+                actualizar();
+
+            }
+
+        );
+
+    });
+
+
+/* =========================
+   ACTUALIZAR PROGRESO
+   ========================= */
+
+function actualizar() {
+
+
+    let totalCompletadas = 0;
+
+
+    for (
+        let dia = 0;
+        dia < 7;
+        dia++
+    ) {
+
+
+        let completadas = 0;
+
+
+        const tareas =
+            document.querySelectorAll(
+                'input[data-dia="' +
+                dia +
+                '"]'
+            );
+
+
+        tareas.forEach(
+            checkbox => {
+
+
+                const clave =
+                    checkbox.dataset.dia +
+                    "-" +
+                    checkbox.dataset.tarea;
+
+
+                /* Recuperar estado */
+
+                checkbox.checked =
+                    estado[clave] === true;
+
+
+                const actividad =
+                    checkbox.closest(
+                        ".actividad"
+                    );
+
+
+                if (
+                    checkbox.checked
+                ) {
+
+
+                    completadas++;
+
+
+                    actividad
+                        .classList
+                        .add("completada");
+
+
+                } else {
+
+
+                    actividad
+                        .classList
+                        .remove("completada");
+
+                }
+
+            }
+        );
+
+
+        totalCompletadas +=
+            completadas;
+
+
+        /* Contador del día */
+
+        document
+            .getElementById(
+                "contador" + dia
+            )
+            .textContent =
+                completadas +
+                " / " +
+                cantidades[dia] +
+                " completadas";
+
+    }
+
+
+    /* =====================
+       PORCENTAJE
+       ===================== */
+
+    const porcentaje =
+        Math.round(
+            (totalCompletadas / TOTAL)
+            * 100
+        );
+
+
+    document
+        .getElementById(
+            "porcentaje"
+        )
+        .textContent =
+            porcentaje + "%";
+
+
+    /* =====================
+       CONTADOR TOTAL
+       ===================== */
+
+    document
+        .getElementById(
+            "total"
+        )
+        .textContent =
+            totalCompletadas +
+            " / " +
+            TOTAL;
+
+
+    /* =====================
+       BARRA
+       ===================== */
+
+    document
+        .getElementById(
+            "barraProgreso"
+        )
+        .style.width =
+            porcentaje + "%";
+
+}
+
+
+/* =========================
+   BOTÓN REINICIAR
+   ========================= */
+
+document
+    .getElementById("reiniciar")
+    .addEventListener(
+        "click",
+        () => {
+
+
+            const confirmar =
+                confirm(
+                    "¿Quieres reiniciar toda la semana?"
+                );
+
+
+            if (!confirmar) {
+                return;
+            }
+
+
+            estado = {};
+
+
+            localStorage.removeItem(
+                CLAVE
+            );
+
+
+            actualizar();
+
+        }
+    );
+
+
+/* =========================
+   INICIAR PÁGINA
+   ========================= */
+
+actualizar();
+
+
+</script>
+
+
+</body>
+
+</html>
